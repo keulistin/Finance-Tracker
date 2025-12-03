@@ -1,6 +1,22 @@
 <?php 
 require 'db.php';
 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    
+    $stmt = $conn->prepare("SELECT * FROM user WHERE username = ?");
+    $stmt->bind_param("s", $_POST["username"]);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $data = $result->fetch_assoc();
+
+    if ($data["password"] == $_POST["password"]) {
+    header ("Location: UserPage.php");
+    }
+    $stmt->close();
+    
+
+}
+
 
 ?>
 
@@ -15,12 +31,12 @@ require 'db.php';
     <div class="main-cont">
         <div class="login-cont">
             <h1>START TRACKING</h1>
-            <form action="">
+            <form action="LandingPage.php" method="POST">
                 <label for="">Username:</label>
-                <input type="text"> <br>
+                <input type="text" name="username"> <br>
                 <label for="">Password</label>
-                <input type="password"> <br>
-                <button>LOGIN</button> <br>
+                <input type="password" name="password"> <br>
+                <button type="submit" name="submit" value="submit">LOGIN</button> <br>
                 <a href="RegisterPage.php">Register</a>
             </form>
         </div>
